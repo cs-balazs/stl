@@ -7,12 +7,6 @@
 #define STL_HEADER_LENGTH 80
 #define STL_FACET_LENGTH 50
 
-typedef struct ReadFileResult
-{
-  char *bytes;
-  size_t length;
-} ReadFileResult;
-
 typedef struct STLReadResult
 {
   float *vertices;
@@ -20,8 +14,6 @@ typedef struct STLReadResult
   size_t vertices_count;
   size_t indices_count;
 } STLReadResult;
-
-ReadFileResult read_file(const char *filename);
 
 STLReadResult stl_read(const char *file_path);
 
