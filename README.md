@@ -1,60 +1,9 @@
 # STL
 
-Small library to handle STL files.
+Small helper library to handle STL files.  
+The way data is loaded is currently designed to be used for OpenGL's `GL_ELEMENT_ARRAY_BUFFER`.
 
 > Only **binary STL files** are supported for now
-
-## Usage
-
-### `stl_read`
-
-- **Input**: path to the `.stl` file.
-- **Output**: An `STLReadResult` that represents the loaded verticies.
-
-### `struct STL`
-
-#### `verticies`
-
-A `float *` containing all the unique verticies.
-
-### `vertices_count`
-
-Number of verticies in `verticies`.  
-This means, the **size** of `verticies` is `vertices_count * 3 * sizeof(float)`.
-
-#### `indices`
-
-A `uint16_t *` containing indices, that map unique verticies to triangles.  
-For example `indices[0]`, `indices[1]` and `indices[2]` describe this triangle: `[ verticies[indices[0]], verticies[indices[1]], verticies[indices[2]] ]`.  
-Similarly, `indices[3]`, `indices[4]`, and `indices[5]` describes `[ verticies[indices[3]], verticies[indices[4]], verticies[indices[5]] ]`, and so on.
-
-#### `indices_count`
-
-Number of indices in `indices`.  
-This means, the **size** of `indices` is `indices_count * sizeof(uint16_t)`.
-
-#### `normals`
-
-A `float *` containing all the unique normal vectors.
-
-#### `normal_indices`
-
-A `uint16_t *` containing indices to unique normals.
-
-> Number of normal indices is `indices_count / 3`
-
-## Building
-
-By default the project is build as a library.
-
-> Example build command: `rm -rf build && mkdir build && cd build && cmake .. && make stl && cd ..`
-
-I'm planning to add sime CLI functionality like converting between binary and ASCII STLs, so the project can be configured to build an executable by defining a `STL_BUILD_MAIN` environment variable.
-
-> Example build commands:  
-> `export STL_BUILD_MAIN=1`  
-> `rm -rf build && mkdir build && cd build && cmake .. && make stl && cd ..`  
-> Run the build executable: `./build/stl`
 
 ## TODO
 
@@ -62,7 +11,8 @@ I'm planning to add sime CLI functionality like converting between binary and AS
 - [x] Load normal vectors
 - [x] Implement `stl_write` (should support both formats, meaning the library could be used as a converter)
 - [ ] Support ASCII STL
-- [ ] Experiment with custom file formats, similar to binary STL, but using fixed sized (1, 2, 4, or 8 bytes, should be specified in the file's header) indices
+- [ ] Support loading into a `{ float *vertices; float *normals; size_t vertices_count }`
+  > normals_count = vertices_count / 3
 
 ## Resources
 
