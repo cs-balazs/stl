@@ -1,6 +1,8 @@
 # STL
 
-Small library to read STL files.
+Small library to handle STL files.
+
+> Only **binary STL files** are supported for now
 
 ## Important
 
@@ -13,11 +15,16 @@ Only **binary STL files** are supported for now, and normal vectors are not bein
 - **Input**: path to the `.stl` file.
 - **Output**: An `STLReadResult` that represents the loaded verticies.
 
-### `STLReadResult`
+### `struct STL`
 
 #### `verticies`
 
 A `float *` containing all the unique verticies.
+
+### `vertices_count`
+
+Number of verticies in `verticies`.  
+This means, the **size** of `verticies` is `vertices_count * 3 * sizeof(float)`.
 
 #### `indices`
 
@@ -25,15 +32,20 @@ A `uint16_t *` containing indices, that map unique verticies to triangles.
 For example `indices[0]`, `indices[1]` and `indices[2]` describe this triangle: `[ verticies[indices[0]], verticies[indices[1]], verticies[indices[2]] ]`.  
 Similarly, `indices[3]`, `indices[4]`, and `indices[5]` describes `[ verticies[indices[3]], verticies[indices[4]], verticies[indices[5]] ]`, and so on.
 
-### `verticies_length`
-
-Number of verticies in `verticies`.  
-This means, the **size** of `verticies` is `verticies_length * 3 * sizeof(float)`.
-
-#### `indices_length`
+#### `indices_count`
 
 Number of indices in `indices`.  
-This means, the **size** of `indices` is `indices * sizeof(uint16_t)`.
+This means, the **size** of `indices` is `indices_count * sizeof(uint16_t)`.
+
+#### `normals`
+
+A `float *` containing all the unique normal vectors.
+
+#### `normal_indices`
+
+A `uint16_t *` containing indices to unique normals.
+
+> Number of normal indices is `indices_count / 3`
 
 ## Building
 
