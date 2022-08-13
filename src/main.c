@@ -3,10 +3,12 @@
 
 int main()
 {
-  STLReadResult stl = stl_read("./assets/cube.stl");
+  STL stl = stl_read("./assets/suzanne.stl");
 
+  printf("%s\n", stl.header);
   printf("stl.indices_count = %d\n", stl.indices_count);
   printf("stl.vertices_count = %d\n", stl.vertices_count);
 
+  stl_free(stl);
   return 0;
 }

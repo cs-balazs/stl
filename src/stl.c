@@ -31,12 +31,13 @@ ReadFileResult read_file(const char *filename)
   return (ReadFileResult){buffer, length};
 };
 
-STLReadResult stl_read(const char *file_path)
+STL stl_read(const char *file_path)
 {
 
   ReadFileResult stl = read_file(file_path);
-  char header[STL_HEADER_LENGTH];
+  char *header = malloc(STL_HEADER_LENGTH + 1);
   memcpy(header, stl.bytes, STL_HEADER_LENGTH);
+  header[STL_HEADER_LENGTH] = '\0';
 
   uint32_t facets;
   memcpy(&facets, stl.bytes + 80, 4);
@@ -91,6 +92,13 @@ STLReadResult stl_read(const char *file_path)
 
   free(stl.bytes);
 
-  return (STLReadResult){vertices, indices, num_of_vertices,
-                         indices_index};
+  return (STL){header, vertices, indices, num_of_vertices,
+               indices_index};
+}
+
+void stl_free(STL stl)
+{
+  free(stl.header);
+  free(stl.vertices);
+  free(stl.vertices);
 }
