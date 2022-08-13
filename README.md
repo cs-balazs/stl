@@ -1,9 +1,9 @@
 # STL
 
-Small helper library to handle STL files.  
+Small helper library to handle _.stl_ files.  
 The way data is loaded is currently designed to be used for OpenGL's `GL_ELEMENT_ARRAY_BUFFER`.
 
-> Only **binary STL files** are supported for now
+> Only **binary _.stl_ files** are supported for now
 
 ## TODO
 
