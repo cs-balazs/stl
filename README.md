@@ -9,8 +9,9 @@ The way data is loaded is currently designed to be used for OpenGL's `GL_ELEMENT
 
 - [x] Return the STL header
 - [x] Load normal vectors
-- [x] Implement `stl_write` (should support both formats, meaning the library could be used as a converter)
+- [x] Implement `stl_write` for binary _.stl_ files
 - [ ] Support ASCII STL
+- [ ] Implement `stl_write` for ASCII _.stl_ files
 - [ ] Support loading into a `{ float *vertices; float *normals; size_t vertices_count }`
   > normals_count = vertices_count / 3
 
