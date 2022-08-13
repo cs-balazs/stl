@@ -4,10 +4,6 @@ Small library to handle STL files.
 
 > Only **binary STL files** are supported for now
 
-## Important
-
-Only **binary STL files** are supported for now, and normal vectors are not being loaded.
-
 ## Usage
 
 ### `stl_read`
