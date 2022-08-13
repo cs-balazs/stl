@@ -3,7 +3,7 @@
 
 int main()
 {
-  STL stl = stl_read("./assets/cube.stl");
+  STL stl = stl_read("./assets/suzanne.stl");
 
   printf("%s\n", stl.header);
   printf("stl.indices_count = %d\n", stl.indices_count);
@@ -16,6 +16,8 @@ int main()
     printf("  [ %f, %f, %f ]\n", stl.normals[normals_index], stl.normals[normals_index + 1], stl.normals[normals_index + 2]);
   }
   printf("]\n");
+
+  stl_write(stl, "./assets/suzanne2.stl");
 
   stl_free(stl);
   return 0;

@@ -9,21 +9,22 @@ typedef struct ReadFileResult
   size_t length;
 } ReadFileResult;
 
-ReadFileResult read_file(const char *filename);
+ReadFileResult read_file(const char *file_path);
+void write_file(const char *file_path, char *buffer, size_t buffer_size);
 
 STL stl_read(const char *file_path)
 {
 
   ReadFileResult stl = read_file(file_path);
-  char *header = malloc(STL_HEADER_LENGTH + 1);
-  memcpy(header, stl.bytes, STL_HEADER_LENGTH);
-  header[STL_HEADER_LENGTH] = '\0';
+  char *header = malloc(STL_HEADER_SIZE + 1);
+  memcpy(header, stl.bytes, STL_HEADER_SIZE);
+  header[STL_HEADER_SIZE] = '\0';
 
   uint32_t facets;
-  memcpy(&facets, stl.bytes + STL_HEADER_LENGTH, 4);
+  memcpy(&facets, stl.bytes + STL_HEADER_SIZE, 4);
 
-  float *vertices = malloc(facets * 3 * 3 * sizeof(float));
-  float *normals = malloc(facets * 3 * sizeof(float));
+  float *vertices = malloc(facets * 3 * STL_VERTEX_SIZE);
+  float *normals = malloc(facets * STL_VERTEX_SIZE);
   uint16_t *indices = malloc(facets * 3 * sizeof(uint16_t));
   uint16_t *normals_indices = malloc(facets * sizeof(uint16_t));
   size_t vertex_index = 0ul;
@@ -31,11 +32,11 @@ STL stl_read(const char *file_path)
   size_t normals_index = 0ul;
   size_t normals_indices_index = 0ul;
 
-  for (size_t i = 84; i < stl.length; i += STL_FACET_LENGTH)
+  for (size_t i = 84; i < stl.length; i += STL_FACET_SIZE)
   {
 
     float new_normal[3];
-    memcpy(new_normal, stl.bytes + i, 3 * sizeof(float));
+    memcpy(new_normal, stl.bytes + i, STL_VERTEX_SIZE);
 
     uint16_t normal_duplicate_index = 0;
     for (size_t prev_normal_index = 0; prev_normal_index < normals_index;
@@ -64,11 +65,11 @@ STL stl_read(const char *file_path)
     }
     normals_indices_index++;
 
-    for (size_t vertex_offset = i + 3 * sizeof(float); vertex_offset <= i + 3 * 3 * sizeof(float);
-         vertex_offset += 3 * sizeof(float))
+    for (size_t vertex_offset = i + STL_VERTEX_SIZE; vertex_offset <= i + 3 * STL_VERTEX_SIZE;
+         vertex_offset += STL_VERTEX_SIZE)
     {
       float new_vertex[3];
-      memcpy(new_vertex, stl.bytes + vertex_offset, 3 * sizeof(float));
+      memcpy(new_vertex, stl.bytes + vertex_offset, STL_VERTEX_SIZE);
 
       uint16_t duplicate_index = 0;
       for (size_t prev_vertex_index = 0; prev_vertex_index < vertex_index;
@@ -110,6 +111,43 @@ STL stl_read(const char *file_path)
                indices_index, normals, normals_indices};
 }
 
+void stl_write(STL stl, const char *file_path)
+{
+  size_t buffer_size = STL_HEADER_SIZE + 4 + stl.indices_count / 3 * STL_FACET_SIZE;
+  char *buffer = malloc(buffer_size);
+
+  // Header
+  memcpy(buffer, stl.header, STL_HEADER_SIZE);
+  size_t buffer_offset = STL_HEADER_SIZE;
+
+  // Number of facets
+  uint32_t num_of_facets = stl.indices_count / 3u;
+  memcpy(buffer + buffer_offset, &num_of_facets, 4);
+  buffer_offset += 4;
+
+  // Facets
+  for (size_t facet_index = 0; facet_index < num_of_facets; facet_index++)
+  {
+    memcpy(buffer + buffer_offset, &stl.normals[stl.normal_indices[facet_index] * 3], STL_VERTEX_SIZE);
+    buffer_offset += STL_VERTEX_SIZE;
+
+    memcpy(buffer + buffer_offset, &stl.vertices[stl.indices[facet_index * 3] * 3], STL_VERTEX_SIZE);
+    buffer_offset += STL_VERTEX_SIZE;
+
+    memcpy(buffer + buffer_offset, &stl.vertices[stl.indices[facet_index * 3 + 1] * 3], STL_VERTEX_SIZE);
+    buffer_offset += STL_VERTEX_SIZE;
+
+    memcpy(buffer + buffer_offset, &stl.vertices[stl.indices[facet_index * 3 + 2] * 3], STL_VERTEX_SIZE);
+    buffer_offset += STL_VERTEX_SIZE;
+
+    memset(buffer + buffer_offset, 0, 2);
+    buffer_offset += 2;
+  }
+
+  write_file(file_path, buffer, buffer_size);
+  free(buffer);
+}
+
 void stl_free(STL stl)
 {
   free(stl.header);
@@ -119,9 +157,9 @@ void stl_free(STL stl)
   free(stl.normal_indices);
 }
 
-ReadFileResult read_file(const char *filename)
+ReadFileResult read_file(const char *file_path)
 {
-  FILE *fp = fopen(filename, "r");
+  FILE *fp = fopen(file_path, "r");
   if (fp == NULL)
   {
     perror("Error while opening the file.\n");
@@ -139,4 +177,18 @@ ReadFileResult read_file(const char *filename)
 
   fclose(fp);
   return (ReadFileResult){buffer, length};
+};
+
+void write_file(const char *file_path, char *buffer, size_t buffer_size)
+{
+  FILE *fp = fopen(file_path, "w");
+  if (fp == NULL)
+  {
+    perror("Error while opening the file.\n");
+    exit(EXIT_FAILURE);
+  }
+
+  fwrite(buffer, 1, buffer_size, fp);
+
+  fclose(fp);
 };

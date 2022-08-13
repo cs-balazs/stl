@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define STL_HEADER_LENGTH 80
-#define STL_FACET_LENGTH 50
+#define STL_HEADER_SIZE 80
+#define STL_FACET_SIZE 50
+#define STL_VERTEX_SIZE 12
 
 // Number of normal vectors = indices_count / 3
 typedef struct STL

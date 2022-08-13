@@ -52,9 +52,8 @@ I'm planning to add sime CLI functionality like converting between binary and AS
 
 - [x] Return the STL header
 - [x] Load normal vectors
-- [ ] Support loading in simple `float *`
+- [x] Implement `stl_write` (should support both formats, meaning the library could be used as a converter)
 - [ ] Support ASCII STL
-- [ ] Implement `stl_write` (should support both formats, meaning the library could be used as a converter)
 - [ ] Experiment with custom file formats, similar to binary STL, but using fixed sized (1, 2, 4, or 8 bytes, should be specified in the file's header) indices
 
 ## Resources
