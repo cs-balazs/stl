@@ -9,15 +9,12 @@
 #define STL_VERTEX_SIZE 12
 
 // Number of normal vectors = indices_count / 3
-typedef struct STL
-{
+typedef struct STL {
   char *header;
   float *vertices;
   uint16_t *indices;
   size_t vertices_count;
   size_t indices_count;
-  float *normals;
-  uint16_t *normal_indices;
 } STL;
 
 STL stl_read(const char *file_path);
