@@ -42,9 +42,9 @@ STL stl_read(const char *file_path)
         if (vertices[prev_vertex_index] == new_vertex[0] &&
             vertices[prev_vertex_index + 1] == new_vertex[1] &&
             vertices[prev_vertex_index + 2] == new_vertex[2] &&
-            vertices[prev_vertex_index + 3] == new_vertex[3] &&
-            vertices[prev_vertex_index + 4] == new_vertex[4] &&
-            vertices[prev_vertex_index + 5] == new_vertex[5]) {
+            vertices[prev_vertex_index + 3] == new_normal[0] &&
+            vertices[prev_vertex_index + 4] == new_normal[1] &&
+            vertices[prev_vertex_index + 5] == new_normal[2]) {
           duplicate_index = prev_vertex_index;
           break;
         }
@@ -56,9 +56,9 @@ STL stl_read(const char *file_path)
         vertices[vertex_index] = new_vertex[0];
         vertices[vertex_index + 1] = new_vertex[1];
         vertices[vertex_index + 2] = new_vertex[2];
-        vertices[vertex_index + 3] = new_vertex[3];
-        vertices[vertex_index + 4] = new_vertex[4];
-        vertices[vertex_index + 5] = new_vertex[5];
+        vertices[vertex_index + 3] = new_normal[0];
+        vertices[vertex_index + 4] = new_normal[1];
+        vertices[vertex_index + 5] = new_normal[2];
         indices[indices_index] = vertex_index / 6u;
         vertex_index += 6;
       }
